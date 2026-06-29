@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Security Harness — Guardrail SOC</title>
+<title>Security Harness ??Guardrail SOC</title>
 <style>
   :root{--bg:#0a0e14;--surface:#121822;--surface2:#0e131c;--border:#1e2733;--text:#e6edf3;--muted:#7d8896;--accent:#2f81f7;--block:#ff5c6c;--warn:#e3b341;--allow:#3fb950;--blocksoft:rgba(255,92,108,.14);--warnsoft:rgba(227,179,65,.14);--allowsoft:rgba(63,185,80,.14);}
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -34,38 +34,27 @@
 </style>
 </head>
 <body>
-  <div class="top"><span class="dot"></span><h1>Security Harness — Guardrail SOC</h1><span class="tag">LIVE · 6 skills</span></div>
-  <div class="sub">AI 에이전트 위험행위 차단 현황 · Microsoft Defender 위협 분류 정렬 · GitHub Copilot</div>
+  <div class="top"><span class="dot"></span><h1>Security Harness ??Guardrail SOC</h1><span class="tag">LIVE 쨌 6 skills</span></div>
+  <div class="sub">AI ?먯씠?꾪듃 ?꾪뿕?됱쐞 李⑤떒 ?꾪솴 쨌 Microsoft Defender ?꾪삊 遺꾨쪟 ?뺣젹 쨌 GitHub Copilot</div>
   <div class="cards">
-    <div class="card"><div class="n" id="ctotal">0</div><div class="l">총 평가</div></div>
-    <div class="card b"><div class="n" style="color:var(--block)" id="cblock">0</div><div class="l">차단 BLOCK</div></div>
-    <div class="card w"><div class="n" style="color:var(--warn)" id="cwarn">0</div><div class="l">경고 WARN</div></div>
-    <div class="card a"><div class="n" style="color:var(--allow)" id="callow">0</div><div class="l">허용 ALLOW</div></div>
+    <div class="card"><div class="n" id="ctotal">0</div><div class="l">珥??됯?</div></div>
+    <div class="card b"><div class="n" style="color:var(--block)" id="cblock">0</div><div class="l">李⑤떒 BLOCK</div></div>
+    <div class="card w"><div class="n" style="color:var(--warn)" id="cwarn">0</div><div class="l">寃쎄퀬 WARN</div></div>
+    <div class="card a"><div class="n" style="color:var(--allow)" id="callow">0</div><div class="l">?덉슜 ALLOW</div></div>
   </div>
   <div class="grid">
-    <div class="panel"><h2>차단 추이 (누적)</h2><svg id="line" width="100%" height="190" viewBox="0 0 560 190" preserveAspectRatio="none"></svg></div>
-    <div class="panel"><h2>판정 분포</h2><div class="donutwrap"><svg id="donut" width="150" height="150" viewBox="0 0 42 42"></svg><div class="donut-c" id="dlegend"></div></div></div>
+    <div class="panel"><h2>李⑤떒 異붿씠 (?꾩쟻)</h2><svg id="line" width="100%" height="190" viewBox="0 0 560 190" preserveAspectRatio="none"></svg></div>
+    <div class="panel"><h2>?먯젙 遺꾪룷</h2><div class="donutwrap"><svg id="donut" width="150" height="150" viewBox="0 0 42 42"></svg><div class="donut-c" id="dlegend"></div></div></div>
   </div>
   <div class="grid">
-    <div class="panel"><h2>최근 실행</h2><table><thead><tr><th>시각</th><th>스킬</th><th>판정</th><th>분류</th></tr></thead><tbody id="rows"></tbody></table></div>
-    <div class="panel"><h2>위협 분류별 차단</h2><div id="cats"></div></div>
+    <div class="panel"><h2>理쒓렐 ?ㅽ뻾</h2><table><thead><tr><th>?쒓컖</th><th>?ㅽ궗</th><th>?먯젙</th><th>遺꾨쪟</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <div class="panel"><h2>?꾪삊 遺꾨쪟蹂?李⑤떒</h2><div id="cats"></div></div>
   </div>
-  <div class="file">로그 로드: <input type="file" id="f" accept=".log,.jsonl"/> (없으면 샘플) · logs/guardrail.log</div>
+  <div class="file">濡쒓렇 濡쒕뱶: <input type="file" id="f" accept=".log,.jsonl"/> (?놁쑝硫??섑뵆) 쨌 logs/guardrail.log</div>
 <script>
-const sample=[
- {ts:"10:01",tool:"guardrail-review",decision:"block",cat:"destructive-action"},
- {ts:"10:02",tool:"secret-scan",decision:"block",cat:"credential-leakage"},
- {ts:"10:03",tool:"guardrail-review",decision:"block",cat:"untrusted-routing"},
- {ts:"10:04",tool:"guardrail-review",decision:"warn",cat:"tool-misuse"},
- {ts:"10:05",tool:"guardrail-review",decision:"allow",cat:"-"},
- {ts:"10:06",tool:"guardrail-review",decision:"warn",cat:"obfuscated-content"},
- {ts:"10:07",tool:"secure-code-review",decision:"block",cat:"credential-leakage"},
- {ts:"10:08",tool:"guardrail-review",decision:"allow",cat:"-"},
- {ts:"10:09",tool:"guardrail-review",decision:"block",cat:"destructive-action"},
- {ts:"10:10",tool:"secret-scan",decision:"block",cat:"credential-leakage"}
-];
 const COL={block:"#ff5c6c",warn:"#e3b341",allow:"#3fb950"};
 const CATCOL=["#ff5c6c","#2f81f7","#e3b341","#a371f7","#3fb950"];
+function parseLog(text){return text.trim().split("\n").map(l=>{try{const j=JSON.parse(l);return{ts:(j.ts||"").slice(11,16),tool:j.tool||"-",decision:j.decision,cat:(j.hits&&j.hits[0]?j.hits[0].category:"-")};}catch{return null;}}).filter(Boolean);}
 function render(d){
  const t=d.length,b=d.filter(x=>x.decision==="block").length,w=d.filter(x=>x.decision==="warn").length,a=d.filter(x=>x.decision==="allow").length;
  ctotal.textContent=t;cblock.textContent=b;cwarn.textContent=w;callow.textContent=a;
@@ -80,8 +69,9 @@ function render(d){
  document.getElementById("cats").innerHTML=Object.entries(cats).sort((p,q)=>q[1]-p[1]).map((e,i)=>'<div class="bar"><span class="name">'+e[0]+'</span><span class="track"><span class="fill" style="width:'+(e[1]/mx*100)+'%;background:'+CATCOL[i%5]+'"></span></span><span class="c">'+e[1]+'</span></div>').join("");
  document.getElementById("rows").innerHTML=d.slice().reverse().map(x=>'<tr><td>'+x.ts+'</td><td>'+x.tool+'</td><td><span class="st '+x.decision+'">'+x.decision.toUpperCase()+'</span></td><td>'+x.cat+'</td></tr>').join("");
 }
-render(sample);
-document.getElementById("f").addEventListener("change",e=>{const r=new FileReader();r.onload=()=>{const d=r.result.trim().split("\n").map(l=>{try{const j=JSON.parse(l);return{ts:(j.ts||"").slice(11,16),tool:j.tool||"-",decision:j.decision,cat:(j.hits&&j.hits[0]?j.hits[0].category:"-")};}catch{return null;}}).filter(Boolean);if(d.length)render(d);};r.readAsText(e.target.files[0]);});
+fetch("guardrail.log").then(r=>r.text()).then(t=>{const d=parseLog(t);if(d.length)render(d);}).catch(()=>{});
+document.getElementById("f").addEventListener("change",e=>{const r=new FileReader();r.onload=()=>{const d=parseLog(r.result);if(d.length)render(d);};r.readAsText(e.target.files[0]);});
 </script>
 </body>
 </html>
+
