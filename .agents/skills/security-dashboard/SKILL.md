@@ -6,9 +6,10 @@ description: Use to launch the guardrail SOC dashboard — a live view of every 
 # Security Dashboard
 
 ## When invoked
-1. Run: `npm run dashboard` (serves `dashboard/index.html` and opens the browser).
-2. Defaults to http://localhost:8765 — override with `PORT=9000 npm run dashboard`.
-3. The dashboard reads the live `logs/guardrail.log` written by `pre-tool-use.js`, so it reflects real decisions, not samples.
+`$HARNESS` = `.agents/scripts` in this repo, else `~/.copilot/harness` (global). Windows global: `$env:USERPROFILE\.copilot\harness`.
+1. Repo: `npm run dashboard`. Global: `node "$HARNESS/dashboard/serve.js"` (serves dashboard + opens browser).
+2. Defaults to http://localhost:8765 — override with `PORT=9000`.
+3. Reads the live `guardrail.log` from `logs/` (repo) or `~/.copilot/logs/` (global), so it reflects real decisions, not samples.
 
 ## What it shows
 - KST timestamps, totals (BLOCK / WARN / ALLOW), cumulative-block trend, decision donut.
@@ -16,4 +17,4 @@ description: Use to launch the guardrail SOC dashboard — a live view of every 
 - Threat-category bars mapped to `CONTEXT.md`.
 
 ## Generate activity
-No log yet? Pipe scenarios through the hook: `npm run demo` then run a few commands through `node .agents/scripts/pre-tool-use.js`, or load any `.log` via the file picker.
+No log yet? Run a few commands through the hook (`node "$HARNESS/pre-tool-use.js"`), or load any `.log` via the file picker.

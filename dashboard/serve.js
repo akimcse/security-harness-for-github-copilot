@@ -7,13 +7,20 @@ const path = require('path');
 const { exec } = require('child_process');
 
 const root = __dirname;
-const logSrc = path.join(root, '..', 'logs', 'guardrail.log');
+const os = require('os');
+const candidates = [
+  path.join(root, '..', 'logs', 'guardrail.log'),
+  path.join(os.homedir(), '.copilot', 'logs', 'guardrail.log'),
+  path.join(os.homedir(), 'logs', 'guardrail.log'),
+];
+function logPath() { return candidates.find((c) => fs.existsSync(c)) || candidates[0]; }
 const port = Number(process.env.PORT) || 8765;
 const mime = { '.html': 'text/html; charset=utf-8', '.log': 'text/plain; charset=utf-8' };
 
 const server = http.createServer((req, res) => {
   let f = req.url === '/' ? '/index.html' : req.url.split('?')[0];
   // Always serve the freshest guardrail.log from logs/ when present.
+  const logSrc = logPath();
   if (f === '/guardrail.log' && fs.existsSync(logSrc)) {
     res.writeHead(200, { 'Content-Type': mime['.log'] });
     return res.end(fs.readFileSync(logSrc));

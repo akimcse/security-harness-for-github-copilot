@@ -5,7 +5,7 @@ description: Use after a guardrail block or alert to investigate. Reads logs/gua
 
 # Incident Triage
 
-1. Read `logs/guardrail.log`; group by category and time.
+1. Read `guardrail.log` from `logs/` (repo) or `~/.copilot/logs/` (global); group by category and time.
 2. Reconstruct what was attempted, which agent/tool, and whether it was blocked.
 3. Assess blast radius: what data/systems were reachable.
 4. Korean report: 타임라인 · 분류 · 영향범위 · 권고 (rotate/contain/rule-update). Verdict on residual risk.

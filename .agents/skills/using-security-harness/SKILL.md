@@ -20,4 +20,4 @@ Router for security work on AI-generated code and agent actions. Pick the skill,
 credential-leakage · untrusted-routing · destructive-action · tool-misuse · obfuscated-content. 모든 스킬 결과는 이 분류로 매핑하고 PASS / NEEDS REVIEW / BLOCK 판정으로 마무리한다.
 
 ## Rule
-사람이 게이트의 주인. 자동 차단·스캔은 *제안*이며, High 발견은 사람 확인 후 진행. 룰은 `.agents/scripts/ruleset.json`에서 코드 없이 확장.
+사람이 게이트의 주인. 자동 차단·스캔은 *제안*이며, High 발견은 사람 확인 후 진행. 룰은 `ruleset.json`(repo=`.agents/scripts`, 전역=`~/.copilot/harness`)에서 코드 없이 확장.
